@@ -10,6 +10,6 @@ let app = new Vue({
         inventory: 100,
         OnSale: false,
         details: ['80% cotton', '20% polyester', 'Gender-neutral'],
+        sizes: ['S','M','L','XL','XXL','XXXL']
     }
  })
- 
