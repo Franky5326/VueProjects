@@ -37,10 +37,23 @@
                 <ul>
                     <li v-for="size in sizes">{{ size }}</li>
                 </ul>
-                 
-                 <a href="https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks"> {{ link }}</a>
+
+                <div v-for="variant in variants" :key="variant.variantId">
+                    <p @mouseover="updateProduct(variant.variantImage)">
+                        {{ variant.variantColor }}
+                    </p>
+                </div>
                 
+                <button v-on:click="addToCart">Add to cart</button>
+                <button style="width:115px;"  v-on:click="removeFromCart">Remove to cart</button> 
+                 <a href="https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks"> {{ link }}</a>
+                 
             </div>
+
+            <div class="cart">
+                <p>Cart({{ cart }})</p>
+             </div>
+             
      
         </div>
      </div>
