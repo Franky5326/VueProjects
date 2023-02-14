@@ -1,6 +1,70 @@
-let app = new Vue({
-    el: '#app',
-    data: {
+Vue.component('product', {
+    props: {
+        premium: {
+            type: Boolean,
+            required: true
+        }
+    },
+ 
+    template: `
+    <div class="product">
+    
+     
+        <div class="product-image">
+            <img :src="image" :alt="altText"/>
+            
+        </div>
+
+        <div class="product-info">
+            <h1>{{ title }}</h1>
+            <p>{{ description }}</p>
+
+            <p v-if="inStock">In stock</p>
+            <p v-else-if="variants.variantQuantity <= 10 && variants.variantQuantity > 0">Almost sold out!</p>
+            <p
+                v-else
+                :class="{ outOffStock: !inStock }"
+            >
+                Out of stock
+            </p>
+            <span v-show="OnSale">{{ sale }}</span>
+
+            <product-details></product-details>
+            <ul>
+                <li v-for="size in sizes">{{ size }}</li>
+            </ul>
+
+            <p>Shipping: {{ shipping }}</p>
+
+            <div
+                class="color-box"
+                v-for="(variant, index) in variants"
+                :key="variant.variantId"
+                :style="{ backgroundColor:variant.variantColor }"
+                @mouseover="updateProduct(index)"
+            >
+            </div>
+        
+                
+
+
+            
+
+            <button 
+            v-on:click="addToCart"
+            :disabled="!inStock"
+            :class="{ disabledButton: !inStock }"
+            >
+            Add to cart</button>
+            
+            <button style="width:115px;"  v-on:click="removeFromCart">Remove to cart</button> 
+            <a href="https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks"> {{ link }}</a>
+            
+        
+    </div>
+`,
+    data() {
+        return {
         product: "Socks",
         brand: 'Vue Mastery',
         description: "A pair of warm, fuzzy socks.",
@@ -10,7 +74,6 @@ let app = new Vue({
         
         inventory: 0,
         OnSale: 'On sale',
-        details: ['80% cotton', '20% polyester', 'Gender-neutral'],
         sizes: ['S','M','L','XL','XXL','XXXL'],
         variants: [
             {
@@ -25,9 +88,10 @@ let app = new Vue({
                 variantImage: "./assets/vmSocks-blue-onWhite.jpg",
                 variantQuantity: 0,
             }
-         ],
-         
+        ],
+        
         cart: 0,
+    }
     },
 
     methods: {
@@ -60,10 +124,38 @@ let app = new Vue({
          sale() {
             return this.product + ' ' + this.brand + ' ' + "Проходит распродажа!";
          },
-     }
 
+         shipping() {
+            if (this.premium) {
+                return "Free";
+            } else {
+                return 2.99
+            }
+         },
+         
+     },
+
+  
     
-     
-     
-     
- })
+})
+
+Vue.component('product-details', {
+    template: `
+            <ul>
+                <li v-for="detail in details">{{ detail }}</li>
+            </ul>
+    `,
+    data() {
+        return {
+            details: ['80% cotton', '20% polyester', 'Gender-neutral'],
+        }
+    }
+})
+
+
+ let app = new Vue({
+    el: '#app',
+    data: {
+        premium: true
+    }
+})
