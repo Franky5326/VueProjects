@@ -7,7 +7,9 @@ let app = new Vue({
         altText: "A pair of socks",
         link: "More products like this.",
         inStock: true,
-        inventory: 100
+        inventory: 100,
+        OnSale: false,
+        details: ['80% cotton', '20% polyester', 'Gender-neutral'],
     }
  })
  
