@@ -45,15 +45,21 @@ Vue.component('product', {
                     >
                     </div>
                     
-                <button
+                    <button
                     v-on:click="addToCart"
-                    :disabled="!inStock"
-                    :class="{ disabledButton: !inStock }"
+                    :disabled="!inStock || variants[selectedVariant].countOfClicksAdd >= variants[selectedVariant].variantQuantity"
+                    :class="{ disabledButton: !inStock || variants[selectedVariant].countOfClicksAdd >= variants[selectedVariant].variantQuantity }"
                 >
                     Add to cart
                 </button>
 
-                <button style="width:140px;"@click="removeFromCart">Remove from cart</button>
+                <button
+                    :disabled="!inStock || variants[selectedVariant].countOfClicksAdd == 0"
+                    :class="{ disabledButton: !inStock || variants[selectedVariant].countOfClicksAdd == 0}"
+                    style="width:140px;"@click="removeFromCart"
+                >
+                    Remove from cart
+                </button>
 
                 <a href="https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks"> {{ link }}</a> 
 
@@ -78,13 +84,15 @@ Vue.component('product', {
                 variantId: 2234,
                 variantColor: 'green',
                 variantImage: "./assets/vmSocks-green-onWhite.jpg",
-                variantQuantity: 10,
+                variantQuantity: 3,
+                countOfClicksAdd: 0,
             },
             {
                 variantId: 2235,
                 variantColor: 'blue',
                 variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                variantQuantity: 0,
+                variantQuantity: 3,
+                countOfClicksAdd: 0,
             }
         ],
 
@@ -97,7 +105,7 @@ Vue.component('product', {
         addToCart() {
             this.$emit('add-to-cart',
             this.variants[this.selectedVariant].variantId);
-            
+            this.variants[this.selectedVariant].countOfClicksAdd++
          },
 
          updateCart(id) {
@@ -109,8 +117,12 @@ Vue.component('product', {
             console.log(index);
          },
 
-        removeFromCart() {
-            this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId);
+         removeFromCart() {
+            this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId); 
+
+            if(this.variants[this.selectedVariant].countOfClicksAdd > 0) {
+                this.variants[this.selectedVariant].countOfClicksAdd--
+            }
          },
 
      
